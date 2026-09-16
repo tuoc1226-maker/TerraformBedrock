@@ -12,7 +12,7 @@
 ## アーキテクチャ
 
 
-![](/media/bedrock-rag-template.drawio_ja.svg)
+![](./media/bedrock-rag-template.drawio_ja.svg)
 
 
 1. [Amazon S3 バケット](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) `bedrock-rag-template-<account_id>` 内にオブジェクトが作成されるたびに、[Amazon S3 通知](https://docs.aws.amazon.com/AmazonS3/latest/userguide/EventNotifications.html)が [Amazon Lambda 関数](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html) `data-ingestion-processor` を呼び出します。 2. Amazon Lambda 関数 `data-ingestion-processor` は、[Amazon ECR リポジトリ](https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-iss-ecr.html) `bedrock-rag-template` に格納された Docker イメージに基づいています。この関数は [LangChain S3FileLoader](https://python.langchain.com/v0.1/docs/integrations/document_loaders/aws_s3_file/) を使用してファイルを読み込み、[LangChain Document](https://api.python.langchain.com/en/v0.0.339/schema/langchain.schema.document.Document.html) 形式に変換します。次に、[LangChain RecursiveTextSplitter](https://python.langchain.com/v0.1/docs/modules/data_connection/document_transformers/recursive_text_splitter/) を使用して各ドキュメントをチャンクに分割します。この際、埋め込みモデルである Amazon Titan Text Embedding V2 の最大トークンサイズに基づいた `CHUNK_SIZE` および `CHUNK_OVERLAP` の値が使用されます。続いて、Lambda 関数は [Amazon Bedrock](https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html) 上の埋め込みモデルを呼び出し、チャンクを数値ベクトル表現に変換（埋め込み）します。最後に、これらのベクトルは Amazon Aurora PostgreSQL データベースに保存されます。Amazon Aurora データベースにアクセスするために、Lambda 関数はまず Amazon Secrets Manager からユーザー名とパスワードを取得します。
