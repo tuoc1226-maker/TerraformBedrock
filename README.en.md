@@ -12,7 +12,7 @@ This repository contains a Terraform implementation of a simple Retrieval-Augmen
 ## Architecture
 
 
-![](./media/bedrock-rag-template.drawio.svg)
+![Pic](/media/bedrock-rag-template.drawio.svg)
 
 
 1. Whenever an object is created in the [Amazon S3 bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) `bedrock-rag-template-<account_id>`, an [Amazon S3 notification](https://docs.aws.amazon.com/AmazonS3/latest/userguide/EventNotifications.html) invokes the [Amazon Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html) `data-ingestion-processor`.
